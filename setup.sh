@@ -30,9 +30,6 @@ mkdir -p $HOME/.kube
 cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 chown $(id -u):$(id -g) $HOME/.kube/config
 
-# create kubectl alias
-printf "%s\n" "alias k='kubectl'" >> $HOME/.bash_aliases
-
 # install networking model
 kubectl create -f https://raw.githubusercontent.com/cilium/cilium/1.9.5/install/kubernetes/quick-install.yaml
 
