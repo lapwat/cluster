@@ -1,10 +1,10 @@
 #!/bin/sh
 
-VPS_IP=$1
+VPS_IP=$(curl -4 ifconfig.co)
 
 # update the system
 apt-get update
-apt-get upgrade -y
+apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" dist-upgrade
 
 # add Docker repository
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
@@ -12,7 +12,7 @@ add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(
 
 # add Kubernetes repository
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/apt/sources.list.d/kubernetes.list && 
+echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/apt/sources.list.d/kubernetes.list
 
 # add Helm repository
 curl https://baltocdn.com/helm/signing.asc | apt-key add -
@@ -36,9 +36,10 @@ kubectl create -f https://raw.githubusercontent.com/cilium/cilium/1.9.5/install/
 # allow master to run pods
 kubectl taint nodes --all node-role.kubernetes.io/master-
 
-# install nginx
+# install ingress
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm install ingress-nginx ingress-nginx/ingress-nginx
+kubectl patch svc ingress-nginx-controller -p "{\"spec\": {\"type\": \"LoadBalancer\", \"externalIPs\":[\"$VPS_IP\"]}}"
 
 # install certificate manager
 helm repo add jetstack https://charts.jetstack.io
