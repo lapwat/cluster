@@ -37,9 +37,9 @@ kubectl create -f https://raw.githubusercontent.com/cilium/cilium/1.9.5/install/
 kubectl taint nodes --all node-role.kubernetes.io/master-
 
 # install ingress
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-helm install ingress-nginx ingress-nginx/ingress-nginx
-kubectl patch svc ingress-nginx-controller -p "{\"spec\": {\"type\": \"LoadBalancer\", \"externalIPs\":[\"$VPS_IP\"]}}"
+helm repo add nginx https://kubernetes.github.io/ingress-nginx
+helm install nginx ingress-nginx/ingress-nginx
+kubectl patch svc nginx-controller -p "{\"spec\": {\"type\": \"LoadBalancer\", \"externalIPs\":[\"$VPS_IP\"]}}"
 
 # install certificate manager
 helm repo add jetstack https://charts.jetstack.io

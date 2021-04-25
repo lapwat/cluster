@@ -1,10 +1,17 @@
-# Usage
+# Install the cluster
 
 ```sh
-export VPS_IP=X.X.X.X
-curl -L https://raw.githubusercontent.com/lapwat/cluster/main/setup.sh | sh -s $VPS_IP
+curl -L https://raw.githubusercontent.com/lapwat/cluster/main/setup.sh | sh
+```
 
-source $HOME/.bash_aliases
-k create --edit -f https://raw.githubusercontent.com/lapwat/cluster/main/letsencrypt-issuer.yaml
-k apply -f https://raw.githubusercontent.com/lapwat/cluster/main/hello-service.yaml
+# Deploy a simple app over an HTTPS endpoint
+
+```sh
+kubectl create --edit -f https://raw.githubusercontent.com/lapwat/cluster/main/letsencrypt-issuer.yaml
+# edit your email address
+
+kubectl create -f https://raw.githubusercontent.com/lapwat/cluster/main/hello-service.yaml
+
+kubectl create --edit -f https://raw.githubusercontent.com/lapwat/cluster/main/nginx-ingress.yaml
+# edit your subdomain
 ```
