@@ -44,7 +44,8 @@ cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 chown $(id -u):$(id -g) $HOME/.kube/config
 
 # install networking model
-kubectl create -f https://raw.githubusercontent.com/cilium/cilium/1.9.5/install/kubernetes/quick-install.yaml
+helm repo add cilium https://helm.cilium.io/
+helm install cilium cilium/cilium --version 1.10.4 --namespace kube-system
 
 # allow master to run pods
 kubectl taint nodes --all node-role.kubernetes.io/master-
@@ -61,5 +62,5 @@ helm install \
   cert-manager jetstack/cert-manager \
   --namespace cert-manager \
   --create-namespace \
-  --version v1.3.0 \
+  --version v1.5.3 \
   --set installCRDs=true
