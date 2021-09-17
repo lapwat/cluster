@@ -18,6 +18,19 @@ echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/apt/so
 curl https://baltocdn.com/helm/signing.asc | apt-key add -
 echo "deb https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sources.list.d/helm-stable-debian.list
 
+# use systemd for the management of the container’s cgroups
+mkdir /etc/docker
+cat <<EOF | sudo tee /etc/docker/daemon.json
+{
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },
+  "storage-driver": "overlay2"
+}
+EOF
+
 # install tools
 apt-get update
 apt install docker-ce kubeadm kubelet kubernetes-cni helm -y
